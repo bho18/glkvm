@@ -117,13 +117,34 @@ li(id="system-dropdown" class="right")
 		table(class="kv")
 			tr(id="hid-connect" class="feature-disabled")
 				+menu_switch_notable("hid-connect-switch", "Connect HID to Server", true, true)
-			tr(id="hid-jiggler" class="feature-disabled")
-				+menu_switch_notable("hid-jiggler-switch", "<a href=\"https://docs.pikvm.org/mouse_jiggler\" target=\"_blank\">Mouse jiggler</a>", false, false)
-			tr
-				+menu_switch_notable("hid-mute-switch", "Mute HID input events", true, false)
-			tr(id="v3-usb-breaker" class="feature-disabled")
-				+menu_switch_notable_gpio("__v3_usb_breaker__", "Connect main USB to Server",
-					"Turning off this switch will disconnect the main USB<br>from the server.  Are you sure you want to continue?")
+                        tr(id="hid-jiggler" class="feature-disabled")
+                                +menu_switch_notable("hid-jiggler-switch", "<a href=\"https://docs.pikvm.org/mouse_jiggler\" target=\"_blank\">Mouse jiggler</a>", false, false)
+                        tr
+                                +menu_switch_notable("hid-mute-switch", "Mute HID input events", true, false)
+                        details
+                                summary Hardware ID
+                                div(class="spoiler")
+                                        table(class="kv")
+                                                tr
+                                                        td Vendor ID:
+                                                        td #[input(type="text" id="hidname-vendor-id")]
+                                                tr
+                                                        td Product ID:
+                                                        td #[input(type="text" id="hidname-product-id")]
+                                                tr
+                                                        td Manufacturer:
+                                                        td #[input(type="text" id="hidname-manufacturer")]
+                                                tr
+                                                        td Product:
+                                                        td #[input(type="text" id="hidname-product")]
+                                                tr
+                                                        td Serial:
+                                                        td #[input(type="text" id="hidname-serial")]
+                                        div(class="buttons")
+                                                button(id="hidname-save-button") Save
+                        tr(id="v3-usb-breaker" class="feature-disabled")
+                                +menu_switch_notable_gpio("__v3_usb_breaker__", "Connect main USB to Server",
+                                        "Turning off this switch will disconnect the main USB<br>from the server.  Are you sure you want to continue?")
 			tr(id="v4-locator" class="feature-disabled")
 				+menu_switch_notable_gpio("__v4_locator__", "Enable locator LED")
 			tr

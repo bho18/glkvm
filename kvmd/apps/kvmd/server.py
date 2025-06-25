@@ -88,6 +88,7 @@ from .api.upgrade import UpgradeApi
 from .api.streamer import StreamerApi
 from .api.export import ExportApi
 from .api.redfish import RedfishApi
+from .api.hidname import HidNameApi
 
 
 # =====
@@ -172,6 +173,8 @@ class KvmdServer(HttpServer):  # pylint: disable=too-many-arguments,too-many-ins
         streamer: Streamer,
         snapshoter: Snapshoter,
 
+        hidname_defaults: dict,
+
         keymap_path: str,
         ignore_keys: list[str],
         mouse_x_range: tuple[int, int],
@@ -191,6 +194,7 @@ class KvmdServer(HttpServer):  # pylint: disable=too-many-arguments,too-many-ins
         self.__stream_forever = stream_forever
 
         self.__hid_api = HidApi(hid, keymap_path, ignore_keys, mouse_x_range, mouse_y_range)  # Ugly hack to get keymaps state
+        self.__hidname_api = HidNameApi(hidname_defaults)
         self.__streamer_api = StreamerApi(streamer, ocr)  # Same hack to get ocr langs state
         self.__fingerbot_api = FingerbotApi()
         self.__apis: list[object] = [
@@ -206,6 +210,7 @@ class KvmdServer(HttpServer):  # pylint: disable=too-many-arguments,too-many-ins
             LogApi(log_reader),
             UserGpioApi(user_gpio),
             self.__hid_api,
+            self.__hidname_api,
             AtxApi(atx),
             MsdApi(msd),
             RndisApi(),

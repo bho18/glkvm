@@ -85,9 +85,11 @@ export function Hid(__getGeometry, __recorder) {
 			tools.storage.set("hid.pak.keymap", $("hid-pak-keymap-selector").value);
 		});
 
-		tools.el.setOnClick($("hid-pak-button"), __clickPasteAsKeysButton);
-		tools.el.setOnClick($("hid-connect-switch"), __clickConnectSwitch);
-		tools.el.setOnClick($("hid-reset-button"), __clickResetButton);
+                tools.el.setOnClick($("hid-pak-button"), __clickPasteAsKeysButton);
+                tools.el.setOnClick($("hid-connect-switch"), __clickConnectSwitch);
+                tools.el.setOnClick($("hid-reset-button"), __clickResetButton);
+                tools.el.setOnClick($("hidname-save-button"), __clickSaveHidName);
+                __loadHidName();
 
 		for (let el_shortcut of $$$("[data-shortcut]")) {
 			tools.el.setOnClick(el_shortcut, function() {
@@ -311,17 +313,47 @@ export function Hid(__getGeometry, __recorder) {
 		});
 	};
 
-	var __clickResetButton = function() {
-		wm.confirm("Are you sure you want to reset HID (keyboard & mouse)?").then(function(ok) {
-			if (ok) {
-				tools.httpPost("/api/hid/reset", function(http) {
-					if (http.status !== 200) {
-						wm.error("HID reset error:<br>", http.responseText);
-					}
-				});
-			}
-		});
-	};
+        var __clickResetButton = function() {
+                wm.confirm("Are you sure you want to reset HID (keyboard & mouse)?").then(function(ok) {
+                        if (ok) {
+                                tools.httpPost("/api/hid/reset", function(http) {
+                                        if (http.status !== 200) {
+                                                wm.error("HID reset error:<br>", http.responseText);
+                                        }
+                                });
+                        }
+                });
+        };
+
+        var __loadHidName = function() {
+                tools.httpGet("/api/hidname", function(http) {
+                        if (http.status === 200) {
+                                let data = JSON.parse(http.responseText).result;
+                                $("hidname-vendor-id").value = data.vendor_id;
+                                $("hidname-product-id").value = data.product_id;
+                                $("hidname-manufacturer").value = data.manufacturer;
+                                $("hidname-product").value = data.product;
+                                $("hidname-serial").value = data.serial || "";
+                        }
+                });
+        };
+
+        var __clickSaveHidName = function() {
+                let params = new URLSearchParams({
+                        vendor_id: $("hidname-vendor-id").value,
+                        product_id: $("hidname-product-id").value,
+                        manufacturer: $("hidname-manufacturer").value,
+                        product: $("hidname-product").value,
+                        serial: $("hidname-serial").value,
+                }).toString();
+                tools.httpPost(`/api/hidname?${params}`, function(http) {
+                        if (http.status === 200) {
+                                wm.info("Hardware ID saved. Rebooting...");
+                        } else {
+                                wm.error("Failed to save HID name:<br>" + http.responseText);
+                        }
+                });
+        };
 
 	__init__();
 }

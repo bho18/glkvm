@@ -113,6 +113,7 @@ def main(argv: (list[str] | None)=None) -> None:
         mouse_y_range=(config.hid.mouse_y_range.min, config.hid.mouse_y_range.max),
 
         stream_forever=config.streamer.forever,
+        hidname_defaults=global_config.otg._unpack(),
     ).run(**config.server._unpack())
 
     get_logger(0).info("Bye-bye")

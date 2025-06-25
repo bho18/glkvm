@@ -13,3 +13,11 @@ KVMD is the core daemon of GLKVM/PiKVM. This repository contains the configurati
 ## Synchronize kvmd changes to the device
 
 When you modify the contents of the kvmd folder and want to synchronize it to the kvm device, you can do so by executing the **apply_to_glkvm.sh** script (note: it needs to be in the same LAN as the kvm device). After execution, you need to restart the kvm device.
+
+## Adjust emulated USB hardware
+
+The web interface provides a "Hardware ID" section under the system settings.
+Here you can change the USB vendor and product IDs as well as manufacturer,
+product name and serial number of the emulated HID device. Saving the form
+stores the values to `/etc/kvmd/override.d/hidname.yaml` and reboots the
+device so that the new identifiers take effect.
